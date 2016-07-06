@@ -28,4 +28,24 @@
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
         android:onClick="showMapChooser"/>
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/pick_contact"
+        android:id="@+id/btnPickContact"
+        android:layout_below="@+id/btnShowMapChooser"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:onClick="pickContact"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:text="Medium Text"
+        android:id="@+id/txtPhoneNumber"
+        android:layout_alignBottom="@+id/btnPickContact"
+        android:layout_toRightOf="@+id/btnPickContact"
+        android:layout_toEndOf="@+id/btnPickContact" />
 </RelativeLayout>
