@@ -57,6 +57,15 @@ public class MainActivity extends AppCompatActivity {
         startActivityForResult(pickContactIntent, PICK_CONTACT_REQUEST);
     }
 
+    public void actionSend(View view) {
+        Intent actionIntent = new Intent(Intent.ACTION_SEND);
+        actionIntent.putExtra(Intent.EXTRA_TEXT, "Hello Khalid");
+        actionIntent.setType("text/plain");
+        if (actionIntent.resolveActivity(getPackageManager()) != null) {
+            startActivityForResult(actionIntent, 2);
+        }
+    }
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         // check which request we are responding to
