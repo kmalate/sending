@@ -6,11 +6,15 @@ import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
 import android.database.Cursor;
 import android.net.Uri;
+import android.os.Bundle;
 import android.provider.ContactsContract;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.view.MenuItemCompat;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
+import android.support.v7.widget.ShareActionProvider;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
 
@@ -19,6 +23,8 @@ import java.util.List;
 public class MainActivity extends AppCompatActivity {
     static final int PICK_CONTACT_REQUEST = 1;
     static final int MY_PERMISSIONS_REQUEST_READ_CONTACTS = 1;
+
+    private ShareActionProvider mShareActionProvider;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -134,6 +140,35 @@ public class MainActivity extends AppCompatActivity {
                 txtPhoneNumber.setText(number);
                 // Do something with the phone number
             }
+        }
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        //Inflate menu resources
+        getMenuInflater().inflate(R.menu.share_menu, menu);
+
+        //Locate menu item with shareActionProvider
+        MenuItem item = menu.findItem(R.id.menu_item_share);
+
+        //Fetch and store ShareActionProvider
+        mShareActionProvider = new ShareActionProvider(this);
+        MenuItemCompat.setActionProvider(item, mShareActionProvider);
+
+        Uri location = Uri.parse("geo:0,0?q=1600+Amphitheatre+Parkway,+Mountain+View,+California");
+        Intent mapIntent = new Intent(Intent.ACTION_VIEW, location);
+        if (mapIntent.resolveActivity(getPackageManager()) != null) {
+            setShareIntent(mapIntent);
+        }
+
+        //Return true to display menu
+        return  true;
+    }
+
+    // Call to update the share intent
+    private void setShareIntent(Intent shareIntent) {
+        if (mShareActionProvider != null) {
+            mShareActionProvider.setShareIntent(shareIntent);
         }
     }
 }
