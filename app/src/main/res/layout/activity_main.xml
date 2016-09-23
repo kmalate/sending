@@ -69,4 +69,32 @@
         android:layout_alignParentStart="true"
         android:onClick="requestPermission"/>
 
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Request File"
+        android:id="@+id/btnRequestFile"
+        android:layout_below="@+id/btnRequestPermission"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:onClick="requestFile"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text=""
+        android:id="@+id/nameView"
+        android:layout_below="@+id/btnRequestFile"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text=""
+        android:id="@+id/sizeView"
+        android:layout_below="@+id/nameView"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true" />
+
 </RelativeLayout>

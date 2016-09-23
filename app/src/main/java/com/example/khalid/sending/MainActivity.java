@@ -7,21 +7,27 @@ import android.content.pm.ResolveInfo;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.ParcelFileDescriptor;
 import android.provider.ContactsContract;
+import android.provider.OpenableColumns;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.ShareActionProvider;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
 
+import java.io.FileDescriptor;
+import java.io.FileNotFoundException;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
     static final int PICK_CONTACT_REQUEST = 1;
+    static final int FILES_REQUEST = 2;
     static final int MY_PERMISSIONS_REQUEST_READ_CONTACTS = 1;
 
     private ShareActionProvider mShareActionProvider;
@@ -95,6 +101,12 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    public void requestFile(View view) {
+        Intent requestFileIntent = new Intent(Intent.ACTION_PICK);
+        requestFileIntent.setType("image/jpg");
+        startActivityForResult(requestFileIntent, FILES_REQUEST);
+    }
+
     @Override
     public void onRequestPermissionsResult(int requestCode, String permissions[], int[] grantResults) {
         switch (requestCode) {
@@ -141,6 +153,49 @@ public class MainActivity extends AppCompatActivity {
                 // Do something with the phone number
             }
         }
+
+        if (requestCode == FILES_REQUEST) {
+            if (resultCode == RESULT_OK) {
+                // Get the file's content URI from the incoming Intent
+                Uri returnUri = data.getData();
+                ParcelFileDescriptor mInputPFD;
+                  /*
+             * Try to open the file for "read" access using the
+             * returned URI. If the file isn't found, write to the
+             * error log and return.
+             */
+                try {
+                    /*
+                 * Get the content resolver instance for this context, and use it
+                 * to get a ParcelFileDescriptor for the file.
+                 */
+                    mInputPFD = getContentResolver().openFileDescriptor(returnUri, "r");
+                    String mimeType = getContentResolver().getType(returnUri);
+
+                    Cursor returnCursor = getContentResolver().query(returnUri, null, null, null, null);
+                     /*
+                 * Get the column indexes of the data in the Cursor,
+                 * move to the first row in the Cursor, get the data,
+                 * and display it.
+                 */
+                    int nameIndex = returnCursor.getColumnIndex(OpenableColumns.DISPLAY_NAME);
+                    int sizeIndex = returnCursor.getColumnIndex(OpenableColumns.SIZE);
+                    returnCursor.moveToFirst();
+                    TextView nameView = (TextView)findViewById(R.id.nameView);
+                    TextView sizeView = (TextView)findViewById(R.id.sizeView);
+                    nameView.setText(returnCursor.getString(nameIndex));
+                    sizeView.setText(returnCursor.getString(sizeIndex));
+                } catch (FileNotFoundException e) {
+                    e.printStackTrace();
+                    Log.e("MainActivity", "File not found");
+                    return;
+                }
+
+                //Get the file descriptor for the file
+                FileDescriptor fd = mInputPFD.getFileDescriptor();
+            }
+        }
+
     }
 
     @Override
